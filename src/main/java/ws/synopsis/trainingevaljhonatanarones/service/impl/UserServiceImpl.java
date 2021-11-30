@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ws.synopsis.trainingevaljhonatanarones.bean.request.PostRequest;
 import ws.synopsis.trainingevaljhonatanarones.bean.request.PutRequest;
+import ws.synopsis.trainingevaljhonatanarones.errorhandling.exception.DuplicatedCellPhoneException;
 import ws.synopsis.trainingevaljhonatanarones.model.User;
 import ws.synopsis.trainingevaljhonatanarones.repository.UserRepository;
 import ws.synopsis.trainingevaljhonatanarones.service.UserService;
@@ -21,7 +22,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(PostRequest postRequest) {
+    public void save(PostRequest postRequest) throws DuplicatedCellPhoneException {
         User userToSave = User.builder()
                 .name(postRequest.getName())
                 .lastName(postRequest.getLastName())

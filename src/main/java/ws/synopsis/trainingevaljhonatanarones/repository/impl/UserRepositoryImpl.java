@@ -1,6 +1,7 @@
 package ws.synopsis.trainingevaljhonatanarones.repository.impl;
 
 import org.springframework.stereotype.Repository;
+import ws.synopsis.trainingevaljhonatanarones.errorhandling.exception.DuplicatedCellPhoneException;
 import ws.synopsis.trainingevaljhonatanarones.model.User;
 import ws.synopsis.trainingevaljhonatanarones.repository.UserRepository;
 
@@ -51,7 +52,11 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void save(User user) {
+    public void save(User user) throws DuplicatedCellPhoneException {
+        if (cellPhoneExists(user.getCellPhone())){
+            throw new DuplicatedCellPhoneException("El celular ya ha sido registrado");
+        }
+
         Long generatedUserId =(long)USERS.size()+1;
         user.setId(generatedUserId);
         USERS.put(generatedUserId, user);
@@ -69,6 +74,10 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public void remove(Long userId) {
         USERS.remove(userId);
+    }
+
+    private boolean cellPhoneExists(String userCellPhone){
+        return !(USERS.entrySet().stream().filter(longUserEntry -> userCellPhone.equals(longUserEntry.getValue().getCellPhone())).collect(Collectors.toList()).isEmpty());
     }
 }
 
